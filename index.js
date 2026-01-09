@@ -1,4 +1,6 @@
 const express = require('express')
+const { connectdb } =require("./test")
+const jwt = require('jsonwebtoken')
 const app = express();
 
 const users = [
@@ -17,7 +19,8 @@ const users = [
 ]
 
 app.use(express.json());
-  
+   connectdb()
+
 app.get("/", (req, res) => {
   return res.send("Hello World")
 });
@@ -27,11 +30,21 @@ app.post("/login", (req, res) => {
   const user = users.find((user) => user.email === email && user.password === password);
   if(!user) {
     return res.status(401).json({message:"Invalid username or password"})
-  }
-  return res.send("Login Success")
+  } 
+  const token = jwt.sign({id: user.id}, "topsecret");
+
+  return res.json({message: "Login success", token });
 });
 
 app.get("/profile", (req, res) => {
+  if (!req.headers.authorization){
+    return res.status(401).json({message:'No token found'});
+  }
+   
+  const token = req.headers.authorization;
+  
+  console.log(token);
+
   return res.send("profile");
 })
 

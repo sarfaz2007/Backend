@@ -1,28 +1,19 @@
-const express = require('express');
-const { getUsers, createUser, deleteUSer } = require('../controllers/users.controller');
+import express from "express";
+import {
+  createUser,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser
+} from "../controllers/user.controller.js";
 
 const router = express.Router();
 
-
-
-router.get("/",require("../middlewares/logger.middleware"), getUsers);
-
-// router.get("/:id", getUser);
-
 router.post("/", createUser);
+router.get("/", getUsers);
+router.get("/:id", getUser);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
 
-router.delete("/:id", deleteUSer);
+export default router;
 
-
-router.get("/:id", (req, res) => {
-  const { id } = req.params;
-  console.log(id)
-
-  return res.send("users");
-});
-
-router.get("/", (req, res) => res.send('users route'));
-
-router.get("/:id", (req, res) => res.send('user # route'));
-
-module.exports = router;
